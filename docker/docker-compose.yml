@@ -1,0 +1,46 @@
+
+version: '3.8'
+
+services:
+  # El Bus de Mensajes (Para comunicación asíncrona entre tus futuros servicios)
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: mdi_bus
+    ports:
+      - "5672:5672"   # Puerto de comunicación de datos
+      - "15672:15672" # Panel de control visual (Entra a http://localhost:15672)
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  # Tu Base de Datos (Independiente de Odoo)
+  postgres_db:
+    image: postgres:15
+    container_name: mdi_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: micro_service_db
+    ports:
+      - "5433:5432" # Usamos el 5433 para no chocar si ya tienes Odoo local
+
+  # El recolector de métricas
+  prometheus:
+    image: prom/prometheus
+    container_name: mdi_prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    # --- AÑADE ESTAS DOS LÍNEAS ---
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # El panel de visualización
+  grafana:
+    image: grafana/grafana
+    container_name: mdi_grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
