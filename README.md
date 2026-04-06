@@ -111,6 +111,3 @@ Luego abre en el navegador:
 
 Prometheus del compose está configurado para scrapear la API en `host.docker.internal:8000`; con la API en el puerto 8000 del host, las métricas deberían verse en Prometheus tras unos segundos.
 
-## Subir el repositorio
-
-El `.gitignore` excluye el entorno virtual (`venv/`), cachés de Python y archivos `.env`. Inicializa el repositorio en la **raíz del proyecto** (carpeta con este `README`, `docker/` y `scripts/` con el código Python) y haz commit del código fuente y la configuración de Docker.
